@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Flight Booking App</title>
+</head>
+<body>
+	<h1>Welcome to the Flight Booking App</h1>
+	<h2>Test route</h2>
+	<form action="/test" method="get">
+		<label for="src">Source:</label>
+		<input type="text" name="param1" id="param1">
+		<br>
+		<input type="submit" value="Test Query">
+	</form>
+	<h2>Create Flight</h2>
+	<form action="/createflight" method="get">
+		<label for="route_id">Route ID:</label>
+		<input type="text" name="route_id" id="route_id">
+		<br>
+		<label for="start">Start:</label>
+		<input type="text" name="start" id="start">
+		<br>
+		<label for="end">End:</label>
+		<input type="text" name="end" id="end">
+		<br>
+		<label for="airline">Airline:</label>
+		<input type="text" name="airline" id="airline">
+		<br>
+		<input type="submit" value="Create Flight">
+	</form>
+	<h2>Find Flight</h2>
+	<form action="/findflight" method="get">
+		<label for="src">Source:</label>
+		<input type="text" name="src" id="src">
+		<br>
+		<label for="dest">Destination:</label>
+		<input type="text" name="dest" id="dest">
+		<br>
+		<input type="submit" value="Find Flight">
+	</form>
+	<h2>Buy Ticket</h2>
+	<form action="/buyticket" method="get">
+		<label for="f_id">Flight ID:</label>
+		<input type="text" name="f_id" id="f_id">
+		<br>
+		<label for="p_id">Passenger ID:</label>
+		<input type="text" name="p_id" id="p_id">
+		<br>
+		<input type="submit" value="Buy Ticket">
+	</form>
+	<h2>Cancel Flight</h2>
+	<form action="/cancelflight" method="get">
+		<label for="f_id">Flight ID:</label>
+		<input type="text" name="f_id" id="f_id">
+		<br>
+		<input type="submit" value="Cancel Flight">
+	</form>
+	 <textarea id="results" rows="10" cols="50" readonly></textarea>
+	 
+	 <script>
+	const form = document.querySelector('form');
+	const results = document.querySelector('#results');
+
+	form.addEventListener('submit', async (event) => {
+		event.preventDefault();
+		const formData = new FormData(form);
+		const url = form.getAttribute('action');
+		const params = new URLSearchParams(formData);
+		const response = await fetch(`${url}?${params.toString()}`);
+		const data = await response.text();
+		results.value = data;
+	});
+    </script>
+</body>
+</html>
