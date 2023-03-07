@@ -72,9 +72,7 @@ def cancelflight():
 
 if __name__ == '__main__':
     with open('create-tables.sql', 'r') as f:
-        query = f.read().replace('{f_id}', f_id)
     cur = mysql.connection.cursor()
     cur.execute(query)
-    data = cur.fetchall()
     cur.close()
     app.run(host="localhost", port=8000, debug=True)
