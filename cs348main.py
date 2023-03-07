@@ -14,16 +14,6 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/test')
-def testfn():
-    print(request.args.get('param1'))
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM city LIMIT 2")
-    data = cur.fetchall()
-    cur.close()
-    return str(data)
-
-
 @app.route('/createflight')
 def createflight():
     route_id = request.args.get('route_id')
@@ -31,7 +21,7 @@ def createflight():
     end = request.args.get('end')
     airline = request.args.get('airline')
     print(route_id,start,end,airline)
-    with open('createflight.txt', 'r') as f:
+    with open('createflight.sql', 'r') as f:
         query = f.read().replace('{route_id}', route_id)
         query = f.read().replace('{start}', start)
         query = f.read().replace('{end}', end)
@@ -47,7 +37,7 @@ def createflight():
 def findflight():
     src = request.args.get('src')
     dest = request.args.get('dest')
-    with open('findflight.txt', 'r') as f:
+    with open('findflight.sql', 'r') as f:
         query = f.read().replace('{src}', src)
         query = f.read().replace('{dest}', dest)
     cur = mysql.connection.cursor()
@@ -60,7 +50,7 @@ def findflight():
 def buyticket():
     f_id = request.args.get('f_id')
     p_id = request.args.get('p_id')
-    with open('buyticket.txt', 'r') as f:
+    with open('buyticket.sql', 'r') as f:
         query = f.read().replace('{f_id}', f_id)
         query = f.read().replace('{p_id}', p_id)
     cur = mysql.connection.cursor()
@@ -72,7 +62,7 @@ def buyticket():
 @app.route('/cancelflight')
 def cancelflight():
     f_id = request.args.get('f_id')
-    with open('cancelflight.txt', 'r') as f:
+    with open('cancelflight.sql', 'r') as f:
         query = f.read().replace('{f_id}', f_id)
     cur = mysql.connection.cursor()
     cur.execute(query)
@@ -81,4 +71,10 @@ def cancelflight():
     return str(data)
 
 if __name__ == '__main__':
+    with open('create-tables.sql', 'r') as f:
+        query = f.read().replace('{f_id}', f_id)
+    cur = mysql.connection.cursor()
+    cur.execute(query)
+    data = cur.fetchall()
+    cur.close()
     app.run(host="localhost", port=8000, debug=True)
