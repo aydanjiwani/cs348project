@@ -40,7 +40,7 @@ CREATE TABLE Routes (
 CREATE TABLE Flights (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     flight_number VARCHAR(10) NOT NULL,
-    route_id INT, -- NOT NULL,
+    route_id INT NOT NULL,
     airline_code VARCHAR(10) NOT NULL,
     -- we don't have data for this column yet
     airplane_code VARCHAR(10), -- NOT NULL
