@@ -21,20 +21,20 @@ with engine.connect() as connection:
     # seed airports
     sql = f'''
     INSERT INTO Airport(code,name,city,country_iso,lat,longit,altitude) VALUES
-        {",".join([f'({row["code"]},{row["name"]},{row["city"]},{row["country_iso"]},{row["lat"]},{row["longit"]},{row["altitude"]})' for row in airports_reader])}
+        {",".join([f'({row["code"]},{row["name"]},{row["city"]},{row["country_iso"]},{row["lat"]},{row["longit"]},{row["altitude"]})' for row in airports_reader])};
     '''
     connection.execute(text(sql))
 
     # seed airlines
     sql = f'''
     INSERT INTO Airlines(code,name) VALUES
-        {",".join([f'({row["code"]},{row["name"]})' for row in airlines_reader])}
+        {",".join([f'({row["code"]},{row["name"]})' for row in airlines_reader])};
     '''
     connection.execute(text(sql))
 
     # seed routes
     sql = f'''
     INSERT INTO Routes(origin_ap_code,dest_ap_code,airline_code) VALUES
-        {",".join([f'({row["origin_ap_code"]},{row["dest_ap_code"]},{row["airline_code"]})' for row  in routes_reader])}
+        {",".join([f'({row["origin_ap_code"]},{row["dest_ap_code"]},{row["airline_code"]})' for row  in routes_reader])};
     '''
     connection.execute(text(sql))
