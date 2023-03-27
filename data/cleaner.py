@@ -19,10 +19,12 @@ countries.to_csv('clean_countries.csv', index=False)
 # -- airports
 
 print("cleaning airports.csv...")
-airports = pd.read_csv('airports.csv', quotechar='"')
+airports = pd.read_csv('airports.csv')
 airports.dropna(subset=['iata'], inplace=True)
 airports.drop(['dst', 'db_timezone', 'source'], axis=1, inplace=True)
 airports.drop(airports[~airports.country.isin(country_to_iso.keys())].index, inplace=True)
+
+airports['name'] = airports['name'].str.replace('"', '')
 
 for index in airports.index:
     if airports.at[index, 'icao'] and airports.at[index, 'iata']:
@@ -31,7 +33,7 @@ for index in airports.index:
     airports.at[index, 'country'] = country_to_iso[airports.at[index, 'country']]
 
 airports.drop(['icao', 'type', 'timezone'], axis=1, inplace=True)
-airports.rename(columns={'country': 'country_iso', 'iata': 'code', 'long': 'longit'}, inplace=True)
+airports.rename(columns={'country': 'country_iso', 'iata': 'code', 'long': 'longit', 'alt': 'altitude'}, inplace=True)
 
 airports.to_csv('clean_airports.csv', index=False)
 
@@ -49,6 +51,7 @@ for index, row in airlines.iterrows():
 
 airlines.drop(['icao', 'alias', 'callsign', 'country'], axis=1, inplace=True)
 airlines.rename(columns={'iata': 'code'}, inplace=True)
+airlines.drop_duplicates(subset=['code'], keep='first', inplace=True)
 
 airlines.to_csv('clean_airlines.csv', index=False)
 
@@ -77,7 +80,7 @@ routes.drop(routes[~routes.origin.isin(airports.code)].index, inplace=True)
 routes.drop(routes[~routes.dest.isin(airports.code)].index, inplace=True)
 
 routes.drop(['airline_id', 'src_id', 'dest_id', 'codeshare', 'stops', 'equipment'], axis=1, inplace=True)
-airports.rename(columns={'origin': 'origin_ap_code', 'dest': 'dest_ap_code', 'airline_iata': 'airline_code'}, inplace=True)
+routes.rename(columns={'origin': 'origin_ap_code', 'dest': 'dest_ap_code', 'airline_iata_icao': 'airline_code'}, inplace=True)
 
 routes.to_csv('clean_routes.csv', index=False)
 
@@ -96,16 +99,16 @@ airplanes.to_csv('clean_airplanes.csv', index=False)
 def clean_flights(filename):
     print(f'cleaning {filename}...')
     flights = pd.read_csv(filename, quotechar='"')
-    flights.rename(columns={'ORIGIN': 'origin', 'DEST': 'dest'}, inplace=True)
+    flights.rename(columns={'ORIGIN': 'origin_ap_code', 'DEST': 'dest_ap_code'}, inplace=True)
 
     # validate airline
     flights.drop(flights[~flights.OP_CARRIER.isin(airlines.code)].index, inplace=True)
 
-    flights = pd.merge(flights, routes, on=['origin', 'dest'], how='outer', indicator=True)
+    flights = pd.merge(flights, routes, on=['origin_ap_code', 'dest_ap_code'], how='outer', indicator=True)
     flights = flights.loc[flights['_merge'] == 'both'].drop('_merge', axis=1)
     flights = flights[[
         'FL_DATE', 'OP_CARRIER', 'OP_CARRIER_FL_NUM', 'TAIL_NUM',
-        'origin', 'dest', 'DEP_TIME', 'CRS_ELAPSED_TIME', 'DISTANCE'
+        'origin_ap_code', 'dest_ap_code', 'DEP_TIME', 'CRS_ELAPSED_TIME', 'DISTANCE'
     ]]
 
     flights.dropna(subset=['DEP_TIME', 'FL_DATE'], how='any', inplace=True)
@@ -122,6 +125,11 @@ def clean_flights(filename):
         assert len(date) == 10
 
         time = str(int(flights.at[index, 'DEP_TIME'])).zfill(4)
+
+        if time[0:2] == "24":
+            flights.drop(index, inplace=True)
+            continue
+
         time = f'{time[0:2]}:{time[2:4]}:00'
 
         datetime = f'{date} {time}'

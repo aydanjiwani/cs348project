@@ -1,4 +1,4 @@
-name,city,country_iso,code,lat,longit,alt
+name,city,country_iso,code,lat,longit,altitude
 Goroka Airport,Goroka,PG,GKA,-6.081689834590001,145.391998291,5282
 Madang Airport,Madang,PG,MAG,-5.20707988739,145.789001465,20
 Mount Hagen Kagamuga Airport,Mount Hagen,PG,HGU,-5.826789855957031,144.29600524902344,5388
@@ -291,7 +291,7 @@ Riesa-Göhlis Airport,Riesa,DE,IES,51.2936096191,13.3561105728,322
 Rechlin-Lärz Airport,Rechlin-laerz,DE,REB,53.306388855,12.7522220612,220
 Schönhagen Airport,Schoenhagen,DE,QXH,52.203609,13.156389,152
 Barth Airport,Barth,DE,BBH,54.338253,12.710515,23
-"Magdeburg ""City"" Airport",Magdeburg,DE,ZMG,52.073612,11.626389,259
+Magdeburg City Airport,Magdeburg,DE,ZMG,52.073612,11.626389,259
 Cottbus-Drewitz Airport,Cottbus,DE,CBU,51.889442,14.531944,272
 Berlin-Schönefeld Airport,Berlin,DE,SXF,52.380001,13.5225,157
 Dresden Airport,Dresden,DE,DRS,51.1328010559082,13.767200469970703,755
@@ -539,7 +539,7 @@ Kraków John Paul II International Airport,Krakow,PL,KRK,50.077702,19.7848,791
 Katowice International Airport,Katowice,PL,KTW,50.4743,19.08,995
 Poznań-Ławica Airport,Poznan,PL,POZ,52.4210014343,16.8262996674,308
 Rzeszów-Jasionka Airport,Rzeszow,PL,RZE,50.1100006104,22.0189990997,675
-"Szczecin-Goleniów ""Solidarność"" Airport",Szczecin,PL,SZZ,53.584701538100006,14.9021997452,154
+Szczecin-Goleniów Solidarność Airport,Szczecin,PL,SZZ,53.584701538100006,14.9021997452,154
 Redzikowo Air Base,Slupsk,PL,OSP,54.47890090942383,17.107500076293945,217
 Warsaw Chopin Airport,Warsaw,PL,WAW,52.1656990051,20.9671001434,362
 Copernicus Wrocław Airport,Wroclaw,PL,WRO,51.1026992798,16.885799408,404
@@ -993,7 +993,7 @@ Grenoble-Isère Airport,Grenoble,FR,GNB,45.36289978027344,5.329370021820068,1302
 Valence-Chabeuil Airport,Valence,FR,VAF,44.9216,4.9699,525
 Vichy-Charmeil Airport,Vichy,FR,VHY,46.169700622558594,3.4037399291992188,817
 Aurillac Airport,Aurillac,FR,AUR,44.89139938354492,2.4219400882720947,2096
-"Châteauroux-Déols ""Marcel Dassault"" Airport",Chateauroux,FR,CHR,46.860278,1.721111,529
+Châteauroux-Déols Marcel Dassault Airport,Chateauroux,FR,CHR,46.860278,1.721111,529
 Lyon-Bron Airport,Lyon,FR,LYN,45.72719955444336,4.944270133972168,659
 Cannes-Mandelieu Airport,Cannes,FR,CEQ,43.542,6.95348,13
 Saint-Étienne-Bouthéon Airport,St-Etienne,FR,EBU,45.54059982299805,4.296390056610107,1325
@@ -1090,13 +1090,13 @@ Santorini Airport,Thira,GR,JTR,36.399200439453125,25.47929954528809,127
 Sitia Airport,Sitia,GR,JSH,35.21609878540039,26.101299285888672,376
 Skiros Airport,Skiros,GR,SKU,38.9676017761,24.4871997833,44
 Thessaloniki Macedonia International Airport,Thessaloniki,GR,SKG,40.51969909667969,22.97089958190918,22
-"Zakynthos International Airport ""Dionysios Solomos""",Zakynthos,GR,ZTH,37.7509,20.8843,15
+Zakynthos International Airport Dionysios Solomos,Zakynthos,GR,ZTH,37.7509,20.8843,15
 Budapest Liszt Ferenc International Airport,Budapest,HU,BUD,47.42976,19.261093,495
 Debrecen International Airport,Debrecen,HU,DEB,47.48889923095703,21.61529922485352,359
 Crotone Airport,Crotone,IT,CRV,38.9972,17.0802,522
 Bari Karol Wojtyła Airport,Bari,IT,BRI,41.138901,16.760599,177
-"Foggia ""Gino Lisa"" Airport",Foggia,IT,FOG,41.432899,15.535,265
-"Taranto-Grottaglie ""Marcello Arlotta"" Airport",Grottaglie,IT,TAR,40.517502,17.4032,215
+Foggia Gino Lisa Airport,Foggia,IT,FOG,41.432899,15.535,265
+Taranto-Grottaglie Marcello Arlotta Airport,Grottaglie,IT,TAR,40.517502,17.4032,215
 Lecce Galatina Air Base,Lecce,IT,LCC,40.239201,18.133301,156
 Pescara International Airport,Pescara,IT,PSR,42.431702,14.1811,48
 Brindisi – Salento Airport,Brindisi,IT,BDS,40.6576,17.947001,47
@@ -2087,7 +2087,7 @@ Anaco Airport,Anaco,VE,AAO,9.430225372314451,-64.4707260131836,721
 General José Antonio Anzoategui International Airport,Barcelona,VE,BLA,10.111111,-64.692222,30
 Barinas Airport,Barinas,VE,BNS,8.615,-70.21416667,615
 Barquisimeto International Airport,Barquisimeto,VE,BRM,10.042746543884276,-69.3586196899414,2042
-"Aeropuerto ""General Tomas de Heres"". Ciudad Bolivar",Ciudad Bolivar,VE,CBL,8.12216091156,-63.5369567871,197
+Aeropuerto General Tomas de Heres. Ciudad Bolivar,Ciudad Bolivar,VE,CBL,8.12216091156,-63.5369567871,197
 Caicara del Orinoco Airport,Caicara De Orinoco,VE,CXA,7.625510215759277,-66.16280364990234,141
 Calabozo Airport,Calabozo,VE,CLZ,8.92465591430664,-67.4170913696289,328
 Canaima Airport,Canaima,VE,CAJ,6.231988906860352,-62.85443115234375,1450
@@ -2675,7 +2675,7 @@ Grand Forks Air Force Base,Red River,US,RDR,47.961101532,-97.4011993408,913
 William P Hobby Airport,Houston,US,HOU,29.64539909,-95.27890015,46
 Buckley Air Force Base,Buckley,US,BFK,39.7016983032,-104.751998901,5662
 Northway Airport,Northway,US,ORT,62.9612999,-141.9290009,1715
-"Warren ""Bud"" Woods Palmer Municipal Airport",Palmer,US,PAQ,61.594898,-149.08901,242
+Warren Bud Woods Palmer Municipal Airport,Palmer,US,PAQ,61.594898,-149.08901,242
 Pittsburgh International Airport,Pittsburgh,US,PIT,40.49150085,-80.23290253,1203
 Wiley Post Will Rogers Memorial Airport,Barrow,US,BRW,71.285402,-156.766008,44
 Ellington Airport,Houston,US,EFD,29.6072998047,-95.1587982178,32

@@ -1,4 +1,4 @@
-airline_iata_icao,origin,dest
+airline_code,origin_ap_code,dest_ap_code
 2B,AER,KZN
 2B,ASF,KZN
 2B,ASF,MRV

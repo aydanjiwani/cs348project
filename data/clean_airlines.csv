@@ -228,12 +228,10 @@ Comair,OH
 Comair,MN
 CommutAir,C5
 Comores Airlines,KR
-Compass Airlines,CP
 Condor Flugdienst,DE
 Consorcio Aviaxsa,6A
 Contact Air,C3
 Continental Airlines,CO
-Continental Express,CO
 Continental Micronesia,CS
 Conviasa,V0
 Copa Airlines,CM
@@ -253,7 +251,6 @@ Deutsche Bahn,2A
 Djibouti Airlines,D8
 Dominicana de Aviaci,DO
 Domodedovo Airlines,E3
-DonbassAero,5D
 Dragonair,KA
 Druk Air,KB
 dba,DI
@@ -310,7 +307,6 @@ Germanwings,4U
 Ghana International Airlines,G0
 Go Air,G8
 GoJet Airlines,G7
-Gol Transportes Aéreos,G3
 Golden Air,DC
 Great Lakes Airlines,ZK
 Grupo TACA,TA
@@ -341,11 +337,9 @@ Icelandair,FI
 Imair Airlines,IK
 IndiGo Airlines,6E
 Indian Airlines,IC
-Indigo,I9
 Indonesia AirAsia,QZ
 Indonesian Airlines,IO
 Interair South Africa,D6
-Interavia Airlines,ZA
 Interlink Airlines,ID
 Intersky,3L
 Iran Air,IR
@@ -359,7 +353,6 @@ Itek Air,GI
 JAL Express,JC
 JALways,JO
 Japan Airlines,JL
-Japan Airlines Domestic,JL
 Japan Asia Airways,EG
 Japan Transocean Air,NU
 Jazeera Airways,J9
@@ -404,7 +397,6 @@ Linhas A,LM
 Lion Mentari Airlines,JT
 Luftfahrtgesellschaft Walter,HE
 Lufthansa,LH
-Lufthansa Cargo,LH
 Lufthansa CityLine,CL
 Lufttransport,L5
 Luxair,LG
@@ -413,7 +405,6 @@ MasAir,M7
 MAT Macedonian Airlines,IN
 MIAT Mongolian Airlines,OM
 MNG Airlines,MB
-Macair Airlines,CC
 Maersk,DM
 Mahan Air,W5
 Malaysia Airlines,MH
@@ -436,14 +427,12 @@ Midway Airlines,JI
 Midwest Airlines,YX
 Midwest Airlines (Egypt),MY
 Moldavian Airlines,2M
-Monarch Airlines,ZB
 Myway Airlines,8I
 Montenegro Airlines,YM
 Moskovia Airlines,3R
 Motor Sich,M9
 MyTravel Airways,VZ
 Myanma Airways,UB
-Myanmar Airways International,8M
 Nasair,UE
 National Jet Systems,NC
 Nationwide Airlines,CE
@@ -459,7 +448,6 @@ Northwest Airlines,NW
 Northwestern Air,J3
 Norwegian Air Shuttle,DY
 Nouvel Air Tunisie,BJ
-Novair,1I
 Nas Air,XY
 Oasis Hong Kong Airlines,O8
 Oceanair,O6
@@ -507,7 +495,6 @@ Air Rarotonga,GZ
 Royal Air Maroc,AT
 Royal Brunei Airlines,BI
 Royal Jordanian,RJ
-Royal Nepal Airlines,RA
 Rwandair Express,WB
 Ryan International Airlines,RD
 Ryanair,FR
@@ -520,7 +507,6 @@ S7 Airlines,S7
 Seaborne Airlines,BB
 SriLankan Airlines,UL
 Sun Country Airlines,SY
-Sky Express,G3
 Spicejet,SG
 Star Flyer,7G
 Skagway Air Service,N5
@@ -530,7 +516,6 @@ Sibaviatrans,5M
 Skynet Airlines,SI
 Sriwijaya Air,SJ
 Sama Airlines,ZS
-Singapore Airlines Cargo,SQ
 Siem Reap Airways,FT
 South East Asian Airlines,DG
 Skyservice Airlines,5G
@@ -581,7 +566,6 @@ Thai Airways International,TG
 Thai AirAsia,FD
 Turkish Airlines,TK
 Twin Jet,T7
-Trans Mediterranean Airlines,TL
 Tiara Air,3P
 Thomsonfly,BY
 Tropic Air,PM
@@ -621,7 +605,6 @@ Virgin Nigeria Airways,VK
 Virgin Atlantic Airways,VS
 Viva Macau,ZG
 Volare Airlines,VE
-Vueling Airlines,VY
 Vladivostok Air,XF
 Varig Log,LC
 Virgin Australia,VA
@@ -633,7 +616,6 @@ WebJet Linhas A,WJ
 Welcome Air,2W
 West Coast Air,8O
 WestJet,WS
-Western Airlines,WA
 Widerøe,WF
 Wind Jet,IV
 Wings Air,IW
@@ -645,7 +627,6 @@ Xiamen Airlines,MF
 Yamal Airlines,YL
 Yemenia,IY
 Zoom Airlines,Z4
-Maldivian Air Taxi,8Q
 Sky Express,XW
 Royal Air Cambodge,VJ
 Air Mandalay,6T
@@ -701,7 +682,6 @@ Air Choice One,3E
 China United,KN
 Locair,ZQ
 Safi Airlines,4Q
-SeaPort Airlines,K5
 Salmon Air,S6
 Bobb Air Freight,01
 Star1 Airlines,V9
@@ -745,7 +725,6 @@ Gadair European Airlines,GP
 Spirit of Manila Airlines,SM
 Chongqing Airlines,OQ
 West Air China,PN
-QatXpress,C3
 OneChina,1C
 NordStar Airlines,Y7
 Joy Air,JR

@@ -1,17 +1,17 @@
 -- Creating tables for the database schema
 CREATE TABLE Airlines (
     code VARCHAR(10) PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+    name VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE Airport (
-    code VARCHAR(10) PRIMARY KEY
+    code VARCHAR(10) PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     city VARCHAR(50) NOT NULL,
     country_iso VARCHAR(10) NOT NULL,
     lat VARCHAR(30) NOT NULL,
     longit VARCHAR(30) NOT NULL,
-    altitude INT NOT NULL,
+    altitude INT NOT NULL
 );
 
 CREATE TABLE Passenger (
@@ -21,6 +21,7 @@ CREATE TABLE Passenger (
 
 CREATE TABLE Airplane (
     ID INT PRIMARY KEY AUTO_INCREMENT,
+    code VARCHAR(10) NOT NULL UNIQUE,
     model VARCHAR(100) NOT NULL,
     -- we don't have this data yet so we make it nullable
     capacity INT -- NOT NULL
@@ -38,8 +39,8 @@ CREATE TABLE Routes (
 
 CREATE TABLE Flights (
     ID INT PRIMARY KEY AUTO_INCREMENT,
-    flight_number VARCHAR(10) NOT NULL UNIQUE,
-    route_id INT NOT NULL,
+    flight_number VARCHAR(10) NOT NULL,
+    route_id INT, -- NOT NULL,
     airline_code VARCHAR(10) NOT NULL,
     -- we don't have data for this column yet
     airplane_code VARCHAR(10), -- NOT NULL

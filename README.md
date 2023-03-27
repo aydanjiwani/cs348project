@@ -13,6 +13,6 @@ python3 cleaner.py
 
 To seed the database (inside `data` directory):
 ```
-python3 seed_basics.py "mysql+mysqldb://<username>:<password>@localhost"
-python3 seed_flights.py "mysql+mysqldb://<username>:<password>@localhost"
+python3 seed_basics.py "mysql+mysqldb://<username>:<password>@localhost/<database>"
+python3 seed_flights.py "mysql+mysqldb://<username>:<password>@localhost/<database>"
 ```

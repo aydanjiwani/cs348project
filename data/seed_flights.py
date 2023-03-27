@@ -16,9 +16,10 @@ with engine.connect() as connection:
     def seed_flights_dataset(filename):
         flights = pd.read_csv(filename, chunksize=2000)
         for chunk in flights:
+
             print('processing chunk...')
             sql = f'''INSERT INTO Flights(flight_number,airline_code,departure_time,duration_minutes,distance_miles) VALUES
-                {",".join([f'({row["flight_number"]},{row["airline_code"]},{row["departure_time"]},{row["duration_minutes"],{row["distance_miles"]}})' for row in chunk])};
+                {",".join([f'("{row["flight_number"]}","{row["airline_code"]}","{row["departure_time"]}",{row["duration_minutes"]},{row["distance_miles"]})' for i, row in chunk.iterrows()])};
             '''
             connection.execute(text(sql))
 
