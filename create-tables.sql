@@ -43,11 +43,11 @@ CREATE TABLE Flights (
     airline_code VARCHAR(10) NOT NULL,
     -- we don't have data for this column yet
     airplane_code VARCHAR(10), -- NOT NULL
-    departure_time DATETIME,
+    departure_time DATETIME NOT NULL,
     end_time DATETIME,
     duration_minutes INT NOT NULL,
     distance_miles INT NOT NULL, -- this should be moved to Routes but whatever
-    status VARCHAR(50) NOT NULL,
+    status VARCHAR(50),
     FOREIGN KEY (route_id) REFERENCES Routes(ID),
     FOREIGN KEY (airline_code) REFERENCES Airlines(code),
     FOREIGN KEY (airplane_code) REFERENCES Airplane(code)
