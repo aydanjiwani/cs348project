@@ -5,7 +5,13 @@ CREATE TABLE Airlines (
 );
 
 CREATE TABLE Airport (
-    code VARCHAR(10) PRIMARY KEY
+    code VARCHAR(10) PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    city VARCHAR(50) NOT NULL,
+    country_iso VARCHAR(10) NOT NULL,
+    lat VARCHAR(30) NOT NULL,
+    longit VARCHAR(30) NOT NULL,
+    altitude INT NOT NULL
 );
 
 CREATE TABLE Passenger (
@@ -15,8 +21,10 @@ CREATE TABLE Passenger (
 
 CREATE TABLE Airplane (
     ID INT PRIMARY KEY AUTO_INCREMENT,
+    code VARCHAR(10) NOT NULL UNIQUE,
     model VARCHAR(100) NOT NULL,
-    capacity INT NOT NULL
+    -- we don't have this data yet so we make it nullable
+    capacity INT -- NOT NULL
 );
 
 CREATE TABLE Routes (
@@ -31,12 +39,16 @@ CREATE TABLE Routes (
 
 CREATE TABLE Flights (
     ID INT PRIMARY KEY AUTO_INCREMENT,
+    flight_number VARCHAR(10) NOT NULL,
     route_id INT NOT NULL,
     airline_code VARCHAR(10) NOT NULL,
-    airplane_code VARCHAR(10) NOT NULL,
-    departure_time DATETIME,
+    -- we don't have data for this column yet
+    airplane_code VARCHAR(10), -- NOT NULL
+    departure_time DATETIME NOT NULL,
     end_time DATETIME,
-    status VARCHAR(50) NOT NULL,
+    duration_minutes INT NOT NULL,
+    distance_miles INT NOT NULL, -- this should be moved to Routes but whatever
+    status VARCHAR(50),
     FOREIGN KEY (route_id) REFERENCES Routes(ID),
     FOREIGN KEY (airline_code) REFERENCES Airlines(code),
     FOREIGN KEY (airplane_code) REFERENCES Airplane(code)

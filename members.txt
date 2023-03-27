@@ -1,0 +1,26 @@
+Aydan:
+- Python backend to run queries
+- JS basic frontend
+- Query implementation
+- John:
+- E/R diagram
+- R11 line graph
+- R8 create new flight
+
+Noredeen:
+- Collected test and production data
+- Wrote preprocessing scripts
+- Wrote seeding scripts
+
+Rohan:
+- R6 Buy a ticket
+- R10 Cancel a flight
+- R1 Application high-level description
+- R2 System support description
+- Helped write the create tables sql
+
+Vaanie:
+- R7 Find flight feature
+- Started implementing R10, R11
+
+Note: Everything not mentioned was done as a team
