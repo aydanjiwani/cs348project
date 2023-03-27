@@ -1,13 +1,6 @@
-SET @origin = "JFK"
-SET @destination = "SFO"
-
-SELECT Flights.ID as flight_id
-FROM Flights
-RIGHT JOIN Routes
-	ON (Flights.route_id = Routes.ID)
-WHERE (
-	SELECT *
-	FROM Routes
-	WHERE Routes.origin_ap_code = @origin AND Routes.dest_ap_code = @destination
-)
-ORDER BY Flights.departure_time;
+SELECT flights.ID as flight_id, departure_time, end_time
+FROM flights
+RIGHT JOIN routes
+	ON (flights.route_id = routes.ID)
+WHERE routes.origin_ap_code = '{src}' AND routes.dest_ap_code = '{dest}'
+ORDER BY flights.departure_time;

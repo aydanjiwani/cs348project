@@ -1,25 +1,24 @@
 -- Creating tables for the database schema
-CREATE TABLE Airlines (
+CREATE TABLE IF NOT EXISTS Airlines (
     code VARCHAR(10) PRIMARY KEY,
     name VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE Airport (
+CREATE TABLE IF NOT EXISTS Airport (
     code VARCHAR(10) PRIMARY KEY
 );
 
-CREATE TABLE Passenger (
+CREATE TABLE IF NOT EXISTS Passenger (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE Airplane (
-    ID INT PRIMARY KEY AUTO_INCREMENT,
-    model VARCHAR(100) NOT NULL,
+CREATE TABLE IF NOT EXISTS Airplane (
+    code VARCHAR(100) PRIMARY KEY,
     capacity INT NOT NULL
 );
 
-CREATE TABLE Routes (
+CREATE TABLE IF NOT EXISTS Routes (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     origin_ap_code VARCHAR(10) NOT NULL,
     dest_ap_code VARCHAR(10) NULL,
@@ -29,11 +28,11 @@ CREATE TABLE Routes (
     FOREIGN KEY (airline_code) REFERENCES Airlines(code)
 );
 
-CREATE TABLE Flights (
+CREATE TABLE IF NOT EXISTS Flights (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     route_id INT NOT NULL,
     airline_code VARCHAR(10) NOT NULL,
-    airplane_code VARCHAR(10) NOT NULL,
+    airplane_code VARCHAR(100) NOT NULL,
     departure_time DATETIME,
     end_time DATETIME,
     status VARCHAR(50) NOT NULL,
@@ -42,7 +41,7 @@ CREATE TABLE Flights (
     FOREIGN KEY (airplane_code) REFERENCES Airplane(code)
 );
 
-CREATE TABLE Ticket (
+CREATE TABLE IF NOT EXISTS Ticket (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     passenger_id INT NOT NULL,
     flight_id INT NOT NULL,
