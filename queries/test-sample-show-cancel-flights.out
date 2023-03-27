@@ -1,0 +1,2 @@
+airline_name	origin_airport_code	dest_airport_code	ID	route_id	airplane_code	departure_time	end_time
+American Airlines	YYZ	SFO	1	1	747	2023-01-27 12:34:56	NULL
