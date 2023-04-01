@@ -52,27 +52,42 @@
 		<input type="submit" value="Cancel Flight">
 		<input type="reset" value="Clear">
 	</form>
+	<h2>Find Flight Cancellations</h2>
+	<form action="/findflightcancellation" method="get">
+		<label for="r_id">Route ID:</label>
+		<input type="text" name="r_id" id="r_id">
+		<br>
+		<label for="dep_time">Departure Time:</label>
+		<input type="text" name="dep_time" id="dep_time">
+		<br>
+		<input type="submit" value="Find Flight Cancellations">
+		<input type="reset" value="Clear">
+	</form>
+	<h2>Display Monthly Delays</h2>
+	<form action="/displaymonthlydelays" method="get">
+		<input type="submit" value="Display Monthly Delays">
+	</form>
 	<textarea id="results" rows="10" cols="50" readonly></textarea>
-	 
+
 	<script>
-	const form = document.querySelectorAll('form');
-	const results = document.querySelector('#results');
+		const form = document.querySelectorAll('form');
+		const results = document.querySelector('#results');
 
-	form.forEach(form => {
-		form.addEventListener('submit', async (event) => {
-			event.preventDefault();
-			const formData = new FormData(form);
-			const url = form.getAttribute('action');
-			const params = new URLSearchParams(formData);
-			const response = await fetch(`${url}?${params.toString()}`);
-			const data = await response.text();
-			results.value = data;
+		form.forEach(form => {
+			form.addEventListener('submit', async (event) => {
+				event.preventDefault();
+				const formData = new FormData(form);
+				const url = form.getAttribute('action');
+				const params = new URLSearchParams(formData);
+				const response = await fetch(`${url}?${params.toString()}`);
+				const data = await response.text();
+				results.value = data;
+			});
+			form.addEventListener('reset', () => {
+				results.value = '';
+			});
 		});
-		form.addEventListener('reset', () => {
-			results.value = '';
-		});
-	});
 
-    </script>
+	</script>
 </body>
 </html>
