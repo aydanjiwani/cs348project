@@ -33,8 +33,8 @@ with engine.connect() as connection:
     with open('clean_routes.csv', newline='') as routes_file:
         routes_reader = csv.DictReader(routes_file)
         sql = f'''
-        INSERT INTO Routes(origin_ap_code,dest_ap_code,airline_code) VALUES
-            {",".join([f'("{row["origin_ap_code"]}","{row["dest_ap_code"]}","{row["airline_code"]}")' for row  in routes_reader])};
+        INSERT INTO Routes(origin_ap_code,dest_ap_code,airline_code, airplane_code) VALUES
+            {",".join([f'("{row["origin_ap_code"]}","{row["dest_ap_code"]}","{row["airline_code"]}","{row["equipment"]})' for row  in routes_reader])};
         '''
         connection.execute(text(sql))
 

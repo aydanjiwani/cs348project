@@ -32,6 +32,7 @@ CREATE TABLE Routes (
     origin_ap_code VARCHAR(10) NOT NULL,
     dest_ap_code VARCHAR(10) NULL,
     airline_code VARCHAR(10) NOT NULL,
+    airplane_code VARCHAR(10) NOT NULL,
     FOREIGN KEY (origin_ap_code) REFERENCES Airport(code),
     FOREIGN KEY (dest_ap_code) REFERENCES Airport(code),
     FOREIGN KEY (airline_code) REFERENCES Airlines(code)
@@ -42,8 +43,6 @@ CREATE TABLE Flights (
     flight_number VARCHAR(10) NOT NULL,
     route_id INT NOT NULL,
     airline_code VARCHAR(10) NOT NULL,
-    -- we don't have data for this column yet
-    airplane_code VARCHAR(10), -- NOT NULL
     departure_time DATETIME NOT NULL,
     end_time DATETIME,
     duration_minutes INT NOT NULL,
