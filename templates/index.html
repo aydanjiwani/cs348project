@@ -2,6 +2,73 @@
 <html>
 <head>
 	<title>Flight Booking App</title>
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			background-color: #f8f8f8;
+			font-family: Arial, sans-serif;
+		}
+		
+		h1 {
+			margin-top: 50px;
+			text-align: center;
+		}
+		
+		form {
+			width: 60%;
+			margin: 50px auto;
+			padding: 20px;
+			background-color: #fff;
+			box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+			border-radius: 5px;
+		}
+		
+		label {
+			display: block;
+			margin-bottom: 10px;
+			font-weight: bold;
+			font-size: 16px;
+		}
+		
+		input[type="text"] {
+			width: 100%;
+			padding: 10px;
+			font-size: 16px;
+			border: none;
+			border-bottom: 1px solid #ccc;
+			margin-bottom: 20px;
+			box-sizing: border-box;
+		}
+		
+		input[type="submit"], input[type="reset"] {
+			background-color: #4CAF50;
+			color: #fff;
+			border: none;
+			padding: 10px 20px;
+			font-size: 16px;
+			cursor: pointer;
+			border-radius: 5px;
+			margin-right: 10px;
+			margin-bottom: 20px;
+			transition: background-color 0.2s ease;
+		}
+		
+		input[type="submit"]:hover, input[type="reset"]:hover {
+			background-color: #3E8E41;
+		}
+		
+		textarea {
+			width: 80%;
+			margin: 0 auto;
+			display: block;
+			padding: 10px;
+			margin-top: 50px;
+			border-radius: 5px;
+			border: none;
+			resize: none;
+		}
+	</style>
 </head>
 <body>
 	<h1>Welcome to the Flight Booking App</h1>
@@ -82,6 +149,7 @@
 				const response = await fetch(`${url}?${params.toString()}`);
 				const data = await response.text();
 				results.value = data;
+				window.scrollTo(0, document.body.scrollHeight);
 			});
 			form.addEventListener('reset', () => {
 				results.value = '';
