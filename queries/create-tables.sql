@@ -62,3 +62,9 @@ CREATE TABLE Ticket (
     FOREIGN KEY (passenger_id) REFERENCES Passenger(ID),
     FOREIGN KEY (flight_id) REFERENCES Flights(ID)
 );
+
+CREATE TABLE Users (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(100) NOT NULL,
+    is_admin TINYINT NOT NULL -- 0 is not admin, 1 is admin
+);
