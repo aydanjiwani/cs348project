@@ -112,6 +112,45 @@ def cancelflight():
     cnx.close()
     return "flight cancelled"
 
+@app.route('/findflightcancellation')
+def findflightcancellation():
+    r_id = request.args.get('r_id')
+    dep_time = request.args.get('dep_time')
+    cnx = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='password',
+        database='world',
+        autocommit=True
+    )
+    cursor = cnx.cursor()
+    with open('queries/test-show-cancel-flights.sql', 'r') as f:
+        query = f.read().replace('{route_id}', r_id)
+        query = query.replace('{date_time}', dep_time)
+        cursor.execute(query)
+        data = cursor.fetchall()
+    cursor.close()
+    cnx.close()
+    return str(data)
+
+@app.route('/displaymonthlydelays')
+def displaymonthlydelays():
+    cnx = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='password',
+        database='world',
+        autocommit=True
+    )
+    cursor = cnx.cursor()
+    with open('queries/delay-linegraph.sql', 'r') as f:
+        query = f.read()
+        cursor.execute(query)
+        data = cursor.fetchall()
+    cursor.close()
+    cnx.close()
+    return str(data)
+
 
 if __name__ == '__main__':
     app.run(host="localhost", port=8000, debug=True)
