@@ -105,7 +105,6 @@ Bombardier CS300,CS3
 Bombardier Global Express,CCX
 British Aerospace (BAC) One Eleven,B11
 British Aerospace 125 series / Hawker/Raytheon 700/800/800XP/850/900,H25
-British Aerospace 125-1000 series / Hawker/Raytheon 1000,H25
 British Aerospace ATP,ATP
 British Aerospace Jetstream 31,J31
 British Aerospace Jetstream 32,J32
@@ -118,17 +117,7 @@ Canadair Regional Jet 200,CR2
 Canadair Regional Jet 700,CR7
 Canadair Regional Jet 900,CR9
 Cessna 172,CN1
-Cessna 182 Skylane,CN1
-Cessna 208 Caravan,CN1
-Cessna 210 Centurion,CN1
 Cessna Citation CJ3,CNJ
-Cessna Citation CJ4,CNJ
-Cessna Citation Excel,CNJ
-Cessna Citation I,CNJ
-Cessna Citation II,CNJ
-Cessna Citation Mustang,CNJ
-Cessna Citation Sovereign,CNJ
-Cessna Citation X,CNJ
 Concorde,SSC
 Dassault Falcon 2000,D20
 Dassault Falcon 50,DF3
@@ -160,7 +149,6 @@ Douglas DC-9-50,D95
 Embraer 170,E70
 Embraer 175,E75
 Embraer 175 (long wing),E7W
-Embraer 175 (short wing),E7W
 Embraer 190,E90
 Embraer 195,E95
 Embraer E190-E2,290
@@ -170,7 +158,6 @@ Embraer EMB 120 Brasilia,EM2
 Embraer Legacy 600,ER3
 Embraer Phenom 100,EP1
 Embraer Phenom 300,EP3
-Embraer RJ135,ER3
 Embraer RJ140,ERD
 Embraer RJ145,ER4
 Fairchild Dornier 328JET,FRJ
@@ -197,7 +184,6 @@ Ilyushin IL76,IL7
 Ilyushin IL86,ILW
 Ilyushin IL96,I93
 Learjet 35,LRJ
-Learjet 60,LRJ
 Lockheed L-1011 Tristar,L10
 Lockheed L-1049 Super Constellation,L49
 Lockheed L-182 / 282 / 382 (L-100) Hercules,LOH

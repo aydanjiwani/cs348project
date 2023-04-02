@@ -1,7 +1,13 @@
 from flask import Flask, render_template, request, redirect
 import mysql.connector
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+
+DB_NAME = 'prod'
+DB_USER = 'noor'
+DB_PWD = 'passowrd'
 
 @app.route('/init')
 def init():
@@ -9,7 +15,7 @@ def init():
         host='localhost',
         user='root',
         password='password',
-        database='world'
+        database='prod'
     )
     cursor = cnx.cursor()
     with open('queries/create-tables.sql', 'r') as f:
@@ -23,6 +29,21 @@ def init():
 def index():
     return render_template('index.html')
 
+@app.route('/airports')
+def get_airports():
+    cnx = mysql.connector.connect(
+        host='localhost',
+        user='noor',
+        password='password',
+        database='prod'
+    )
+    cursor = cnx.cursor()
+    code = request.args.get('code', default='', type=str)
+    cursor.execute("SELECT code FROM Airport WHERE code LIKE CONCAT('%', %s, '%')", [code])
+    data = cursor.fetchall()
+    cursor.close()
+    cnx.close()
+    return {"data": data}
 
 @app.route('/createflight')
 def createflight():
@@ -38,13 +59,7 @@ def createflight():
         database='world'
     )
     cursor = cnx.cursor()
-    with open('queries/test-add-flight.sql', 'r') as f:
-        query = f.read().replace('{route_id}', route_id)
-        query = query.replace('{start}', start)
-        query = query.replace('{end}', end)
-        query = query.replace('{airline}', airline)
-        cursor.execute(query)
-        cnx.commit()
+    data = cursor.fetchall()
     cursor.close()
     cnx.close()
     return "flight created"
@@ -153,4 +168,4 @@ def displaymonthlydelays():
 
 
 if __name__ == '__main__':
-    app.run(host="localhost", port=8000, debug=True)
+    app.run(host="localhost", port=8000, debug=True, ssl_context="adhoc")
