@@ -55,6 +55,17 @@ airlines.drop_duplicates(subset=['code'], keep='first', inplace=True)
 
 airlines.to_csv('clean_airlines.csv', index=False)
 
+# -- airplanes
+
+print("cleaning airplanes.csv...")
+airplanes = pd.read_csv('airplanes.csv')
+airplanes.drop(['icao'], axis=1, inplace=True)
+airplanes.dropna(subset=['iata', 'name'], how='any', inplace=True)
+airplanes['iata'] = airplanes['iata'].map(lambda c: c.split(" ")[0])
+airplanes.drop_duplicates(subset=['iata'], keep='first', inplace=True)
+
+airplanes.to_csv('clean_airplanes.csv', index=False)
+
 # -- routes
 
 print("cleaning routes.csv...")
@@ -81,20 +92,12 @@ for index in routes.index:
 routes.drop(routes[~routes.airline_iata_icao.isin(airlines.code)].index, inplace=True)
 routes.drop(routes[~routes.origin.isin(airports.code)].index, inplace=True)
 routes.drop(routes[~routes.dest.isin(airports.code)].index, inplace=True)
+routes.drop(routes[~routes.equipment.isin(airplanes.iata)].index, inplace=True)
 
 routes.drop(['airline_id', 'src_id', 'dest_id', 'codeshare', 'stops'], axis=1, inplace=True)
 routes.rename(columns={'origin': 'origin_ap_code', 'dest': 'dest_ap_code', 'airline_iata_icao': 'airline_code'}, inplace=True)
 
 routes.to_csv('clean_routes.csv', index=False)
-
-# -- airplanes
-
-print("cleaning airplanes.csv...")
-airplanes = pd.read_csv('airplanes.csv')
-airplanes.dropna(subset=['iata'], inplace=True)
-airplanes.drop(['icao'], axis=1, inplace=True)
-
-airplanes.to_csv('clean_airplanes.csv', index=False)
 
 # -- flights
 
