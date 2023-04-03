@@ -1,18 +1,27 @@
-from flask import Flask, render_template, request, redirect, make_response, session
+from flask import Flask, render_template, request, redirect, session, jsonify
 import mysql.connector
 from flask_cors import CORS
 import hashlib
+from flask_session import Session
+from datetime import timedelta
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
+
+app.config.update(
+    SECRET_KEY='a secret key',
+    SESSION_COOKIE_SAMESITE='Lax',
+    SESSION_COOKIE_SECURE=False,
+    PERMANENT_SESSION_LIFETIME=timedelta(days=30)
+)
+
+app.config['SESSION_TYPE'] = 'filesystem'
+Session(app)
 
 # Change these according to your database
 DB_NAME = 'world'
 DB_USER = 'username'
 DB_PWD = 'password'
-
-# Secret key for session
-app.secret_key = 'a secret key'
 
 
 @app.route('/init')
@@ -181,54 +190,127 @@ def displaymonthlydelays():
 
 @app.route('/register', methods=['POST'])
 def register():
-    data = request.get_json()
-    username = data['username']
-    password = data['password']
-    hashed_password = hashlib.sha256(password.encode()).hexdigest()
+    try:
+        data = request.get_json()
+        username = data['username']
+        password = data['password']
+        profile_picture_url = data['profilePicture']
+        role = data['role']
 
-    cnx = mysql.connector.connect(
-        host='localhost',
-        user=DB_USER,
-        password=DB_PWD,
-        database=DB_NAME,
-        autocommit=True
-    )
-    cursor = cnx.cursor()
-    cursor.execute("INSERT INTO Users (username, password) VALUES (%s, %s)",
-                   [username, hashed_password])
-    cnx.commit()
-    cursor.close()
-    return {'status': 'success'}
+        hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
+        cnx = mysql.connector.connect(
+            host='localhost',
+            user=DB_USER,
+            password=DB_PWD,
+            database=DB_NAME,
+            autocommit=True
+        )
 
-@app.route('/login', methods=['POST'])
-def login():
-    data = request.get_json()
-    username = data['username']
-    password = data['password']
-    hashed_password = hashlib.sha256(password.encode()).hexdigest()
+        cursor = cnx.cursor()
+        cursor.execute("INSERT INTO Users (username, password, role, profile_picture_url) VALUES (%s, %s, %s, %s)", [
+            username, hashed_password, role, profile_picture_url])
+        cnx.commit()
 
-    cnx = mysql.connector.connect(
-        host='localhost',
-        user=DB_USER,
-        password=DB_PWD,
-        database=DB_NAME,
-        autocommit=True
-    )
-    cursor = cnx.cursor()
-    cursor.execute("SELECT ID, username, role, profile_picture_url FROM Users WHERE username=%s AND password=%s", [
-                   username, hashed_password])
-    user = cursor.fetchone()
-    cursor.close()
+        cursor.execute(
+            "SELECT ID, username, role, profile_picture_url FROM Users WHERE username=%s", [username])
+        user = cursor.fetchone()
 
-    if user:
+        session.permanent = True
         session['user_id'] = user[0]
         session['username'] = user[1]
         session['role'] = user[2]
         session['profile_picture_url'] = user[3]
-        return {'status': 'success'}
-    else:
-        return {'status': 'error'}, 401
+
+        cursor.close()
+
+        user_dict = {
+            'id': user[0],
+            'username': user[1],
+            'role': user[2],
+            'profile_picture_url': user[3]
+        }
+
+        return jsonify({'status': 'success', 'user': user_dict})
+    except Exception as e:
+        return jsonify({'status': e}), 500
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    try:
+        data = request.get_json()
+        username = data['username']
+        password = data['password']
+        hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
+        cnx = mysql.connector.connect(
+            host='localhost',
+            user=DB_USER,
+            password=DB_PWD,
+            database=DB_NAME,
+            autocommit=True
+        )
+        cursor = cnx.cursor()
+        cursor.execute("SELECT ID, username, role, profile_picture_url FROM Users WHERE username=%s AND password=%s", [
+            username, hashed_password])
+        user = cursor.fetchone()
+        cursor.close()
+
+        if user:
+            session.permanent = True
+            session['user_id'] = user[0]
+            session['username'] = user[1]
+            session['role'] = user[2]
+            session['profile_picture_url'] = user[3]
+
+            user_dict = {
+                'id': user[0],
+                'username': user[1],
+                'role': user[2],
+                'profile_picture_url': user[3]
+            }
+
+            return jsonify({'status': 'success', 'user': user_dict})
+        else:
+            return jsonify({'status': 'User does not exist'}), 401
+    except Exception as e:
+        return jsonify({'status': e}), 500
+
+
+@app.route('/currentuser', methods=['GET'])
+def current_user():
+    if 'user_id' in session:
+        user_id = session['user_id']
+
+        cnx = mysql.connector.connect(
+            host='localhost',
+            user=DB_USER,
+            password=DB_PWD,
+            database=DB_NAME,
+            autocommit=True
+        )
+        cursor = cnx.cursor()
+        cursor.execute(
+            "SELECT ID, username, role, profile_picture_url FROM Users WHERE ID = %s", [user_id])
+        user = cursor.fetchone()
+        cursor.close()
+
+        if user:
+            return jsonify({
+                'id': user[0],
+                'username': user[1],
+                'role': user[2],
+                'profile_picture_url': user[3]
+            })
+
+    return jsonify({'error': 'No user is logged in'}), 401
+
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return jsonify({'status': 'success'})
 
 
 if __name__ == '__main__':
