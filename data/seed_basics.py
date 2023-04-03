@@ -14,7 +14,7 @@ engine = create_engine(DB_URL)
 try:
     with engine.connect() as connection:
         # seed airports
-        with open('clean_airports.csv', newline='') as airports_file:
+        with open('clean_airports.csv', newline='', encoding="UTF-8") as airports_file:
             airports_reader = csv.DictReader(airports_file)
             sql = f'''
             INSERT INTO Airport(code,name,city,country_iso,lat,longit,altitude) VALUES
@@ -23,7 +23,7 @@ try:
             connection.execute(text(sql))
 
         # seed airlines
-        with open('clean_airlines.csv', newline='') as airlines_file:
+        with open('clean_airlines.csv', newline='',  encoding="UTF-8") as airlines_file:
             airlines_reader = csv.DictReader(airlines_file)
             sql = f'''
             INSERT INTO Airlines(code,name) VALUES
@@ -32,7 +32,7 @@ try:
             connection.execute(text(sql))
 
         # seed airplanes
-        with open('clean_airplanes.csv', newline='') as airplanes_file:
+        with open('clean_airplanes.csv', newline='',  encoding="UTF-8") as airplanes_file:
             airplanes_file = csv.DictReader(airplanes_file)
             sql = f'''
             INSERT INTO Airplane(code,model) VALUES
@@ -41,7 +41,7 @@ try:
             connection.execute(text(sql))
 
         # seed routes
-        with open('clean_routes.csv', newline='') as routes_file:
+        with open('clean_routes.csv', newline='',  encoding="UTF-8") as routes_file:
             routes_reader = csv.DictReader(routes_file)
             sql = f'''
             INSERT INTO Routes(origin_ap_code,dest_ap_code,airline_code,airplane_code) VALUES
