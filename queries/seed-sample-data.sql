@@ -21,3 +21,7 @@ INSERT INTO Ticket(id, passenger_id, flight_id, seat_number, status)
 VALUES (3, 1, 1, 3, "book");
 INSERT INTO Ticket(id, passenger_id, flight_id, seat_number, status)
 VALUES (4, 1, 1, 4, "book");
+INSERT INTO Users(id, username, is_admin)
+VALUES (1, 'Vaanie', 1);
+INSERT INTO Users(id, username, is_admin)
+VALUES (2, 'Foo', 0);
