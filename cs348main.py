@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect
 import mysql.connector
+import pymysql
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -7,7 +8,7 @@ CORS(app)
 
 DB_NAME = 'prod'
 DB_USER = 'noor'
-DB_PWD = 'passowrd'
+DB_PWD = 'password'
 
 
 @app.route('/init')
@@ -69,25 +70,88 @@ def createflight():
     return "flight created"
 
 
-@app.route('/findflight')
-def findflight():
-    src = request.args.get('src')
+@app.route('/flights')
+def get_flights():
+    src = request.args.get('origin')
     dest = request.args.get('dest')
+    status = request.args.get('status')
+
+    page = int(request.args.get('page'))
+    results_per_page = int(request.args.get('results_per_page'))
+
     cnx = mysql.connector.connect(
         host='localhost',
         user=DB_USER,
         password=DB_PWD,
         database=DB_NAME
     )
-    cursor = cnx.cursor()
-    with open('queries/test-find-flight.sql', 'r') as f:
-        query = f.read().replace('{src}', src)
-        query = query.replace('{dest}', dest)
-        cursor.execute(query)
-        data = cursor.fetchall()
+    cursor = cnx.cursor(dictionary=True)
+
+    query = '''SELECT Flights.ID as id, departure_time, flight_number,
+                      origin_ap.code AS origin_ap_code,
+                      dest_ap.code AS dest_ap_code,
+                      origin_ap.city AS from_city,
+                      dest_ap.city AS to_city,
+                      Airplane.model AS airplane_model,
+                      status, Airlines.name as airline_name
+               FROM Flights
+               INNER JOIN Airlines ON (Airlines.code = Flights.airline_code)
+               INNER JOIN Routes ON (Flights.route_id = Routes.ID)
+               INNER JOIN Airplane ON (Airplane.code = Routes.airplane_code)
+               INNER JOIN Airport AS origin_ap ON (origin_ap.code = Routes.origin_ap_code)
+               INNER JOIN Airport AS dest_ap ON (dest_ap.code = Routes.dest_ap_code)
+               '''
+
+    arg_arr = []
+    if src or dest or status:
+        query += 'WHERE '
+    if src:
+        query += 'Routes.origin_ap_code = %s '
+        arg_arr.append(src)
+    if dest:
+        query += f'{"AND" if src else ""} Routes.dest_ap_code = %s '
+        arg_arr.append(dest)
+    if status:
+        query += f'{"AND" if src or dest else ""} Flights.status = %s '
+        arg_arr.append(status)
+
+
+    query += 'ORDER BY Flights.departure_time LIMIT %s,%s;'
+    print(query)
+
+    offset = (page-1) * results_per_page
+    cursor.execute(query, arg_arr + [offset, results_per_page])
+
+    data = cursor.fetchall()
+
     cursor.close()
     cnx.close()
-    return str(data)
+    return data
+
+
+@app.route('/routes')
+def get_routes():
+    src = request.args.get('origin_ap_code')
+    dest = request.args.get('dest_ap_code')
+    airline_name = request.args.get('airline_name')
+
+    cnx = mysql.connector.connect(
+        host='localhost',
+        user=DB_USER,
+        password=DB_PWD,
+        database=DB_NAME
+    )
+    cursor = cnx.cursor(dictionary=True)
+
+    query = ''' '''
+
+    cursor.execute(query, [src, dest, airline_name])
+
+    data = cursor.fetchall()
+
+    cursor.close()
+    cnx.close()
+    return data
 
 
 @app.route('/buyticket')
@@ -111,9 +175,9 @@ def buyticket():
     return "ticket bought"
 
 
-@app.route('/cancelflight')
-def cancelflight():
-    f_id = request.args.get('f_id')
+@app.route('/cancel_flight')
+def cancel_flight():
+    f_id = request.args.get('flight_id')
     cnx = mysql.connector.connect(
         host='localhost',
         user=DB_USER,
@@ -131,15 +195,17 @@ def cancelflight():
     cnx.close()
     return "flight cancelled"
 
+
+# the new UI does not use this
 @app.route('/findflightcancellation')
 def findflightcancellation():
     r_id = request.args.get('r_id')
     dep_time = request.args.get('dep_time')
     cnx = mysql.connector.connect(
         host='localhost',
-        user='root',
-        password='password',
-        database='world',
+        user=DB_USER,
+        password=DB_PWD,
+        database=DB_NAME,
         autocommit=True
     )
     cursor = cnx.cursor()
@@ -152,13 +218,14 @@ def findflightcancellation():
     cnx.close()
     return str(data)
 
+
 @app.route('/displaymonthlydelays')
 def displaymonthlydelays():
     cnx = mysql.connector.connect(
         host='localhost',
-        user='root',
-        password='password',
-        database='world',
+        user=DB_USER,
+        password=DB_PWD,
+        database=DB_NAME,
         autocommit=True
     )
     cursor = cnx.cursor()
