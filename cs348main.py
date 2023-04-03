@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, redirect, session, jsonify
+from flask import Flask, render_template, request, redirect, session, jsonify, Markup
 import mysql.connector
 from flask_cors import CORS
 import hashlib
 from flask_session import Session
 from datetime import timedelta
+import pydeck as pdk
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -22,6 +23,57 @@ Session(app)
 DB_NAME = 'world'
 DB_USER = 'username'
 DB_PWD = 'password'
+
+
+def displaymap(points):
+    # Extracting start and end coordinates from the list
+    start_points = [[float(point[0]), float(point[1])] for point in points]
+    end_points = [[float(point[2]), float(point[3])] for point in points]
+    points_dict = [{'start_lon': float(point[0]), 'start_lat':float(
+        point[1]), 'end_lon':float(point[2]), 'end_lat': float(point[3])} for point in points]
+
+    # Creating the scatterplot layer for start points
+    start_layer = pdk.Layer(
+        'ScatterplotLayer',
+        data=start_points,
+        get_position='-',
+        get_radius=20000,
+        get_fill_color=[0, 255, 0],
+        pickable=True,
+        filled=True
+    )
+
+    # Creating the scatterplot layer for end points
+    end_layer = pdk.Layer(
+        'ScatterplotLayer',
+        data=end_points,
+        get_position='-',
+        get_radius=20000,
+        get_fill_color=[0, 255, 0],
+        pickable=True,
+        filled=True
+    )
+
+    # Creating the line layer
+    line_layer = pdk.Layer(
+        'LineLayer',
+        data=points_dict,
+        get_source_position='[start_lon,start_lat]',
+        get_target_position='[end_lon,end_lat]',
+        get_color=[255, 255, 255],
+        get_width=1,
+        pickable=True
+    )
+
+    # Combining the layers in a deck
+    deck = pdk.Deck(layers=[start_layer, end_layer, line_layer])
+
+    # Displaying the deck
+    # Get the HTML code for the Pydeck visualization
+    html = deck.to_html(as_string=True)
+
+    # Render the HTML template with the Pydeck visualization
+    return html
 
 
 @app.route('/init')
@@ -44,6 +96,34 @@ def init():
 @app.route('/')
 def index():
     return render_template('index.html')
+
+
+@app.route('/routemap')
+def routemap():
+    cnx = mysql.connector.connect(
+        host='localhost',
+        user=DB_USER,
+        password=DB_PWD,
+        database=DB_NAME
+    )
+    cursor = cnx.cursor()
+    code = request.args.get('code', default='', type=str)
+    cursor.execute("""SELECT origin.longit AS start_long, origin.lat AS start_lat, dest.longit AS end_long, dest.lat AS end_lat
+FROM airport AS origin
+JOIN routes ON origin.code = routes.origin_ap_code
+JOIN airport AS dest ON dest.code = routes.dest_ap_code
+JOIN (
+  SELECT DISTINCT route_id, COUNT(*) AS num_flights
+  FROM flights
+  GROUP BY route_id
+) AS flight_counts ON routes.ID = flight_counts.route_id
+ORDER BY num_flights DESC
+LIMIT 100;
+""")
+    data = cursor.fetchall()
+    cursor.close()
+    cnx.close()
+    return Markup(displaymap(data))
 
 
 @app.route('/airports')
