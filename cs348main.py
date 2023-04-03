@@ -425,5 +425,65 @@ def logout():
     return jsonify({'status': 'success'})
 
 
+@app.route("/users", methods=["GET"])
+def get_users():
+    try:
+        cnx = mysql.connector.connect(
+            host="localhost",
+            user=DB_USER,
+            password=DB_PWD,
+            database=DB_NAME,
+            autocommit=True
+        )
+        cursor = cnx.cursor()
+        cursor.execute(
+            "SELECT id, username, role, profile_picture_url FROM Users")
+        users = cursor.fetchall()
+        cursor.close()
+
+        users_list = []
+        for user in users:
+            user_dict = {
+                "id": user[0],
+                "username": user[1],
+                "role": user[2],
+                "profile_picture_url": user[3]
+            }
+            users_list.append(user_dict)
+
+        return jsonify(users_list)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/updaterole", methods=["POST"])
+def update_role():
+    try:
+        data = request.get_json()
+        user_id = data['user_id']
+        new_role = data['role']
+
+        if user_id is None or new_role is None:
+            return jsonify({"error": "Missing user_id or role"}), 400
+
+        cnx = mysql.connector.connect(
+            host="localhost",
+            user=DB_USER,
+            password=DB_PWD,
+            database=DB_NAME,
+            autocommit=True
+        )
+        cursor = cnx.cursor()
+        cursor.execute("UPDATE Users SET role = %s WHERE id = %s", [
+                       new_role, user_id])
+
+        cursor.close()
+        cnx.close()
+
+        return jsonify({"message": "Role updated successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 if __name__ == '__main__':
     app.run(host="localhost", port=8000, debug=True)
