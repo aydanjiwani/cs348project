@@ -226,6 +226,26 @@ def cancelflight():
     cnx.close()
     return "flight cancelled"
 
+@app.route('/emailpassengers')
+def emailpassengers():
+    f_id = request.args.get('f_id')
+    cnx = mysql.connector.connect(
+        host='localhost',
+        user=DB_USER,
+        password=DB_PWD,
+        database=DB_NAME,
+        autocommit=True
+    )
+    cursor = cnx.cursor()
+    with open('queries/get-passengers.sql', 'r') as f:
+        query = f.read().replace('{f_id}', f_id)
+        print(query)
+        cursor.execute(query)
+        emaildata = cursor.fetchall()
+        cnx.commit()
+    cursor.close()
+    cnx.close()
+    return "passengers emailed"
 
 @app.route('/findflightcancellation')
 def findflightcancellation():
