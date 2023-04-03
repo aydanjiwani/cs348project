@@ -276,6 +276,7 @@ def register():
         password = data['password']
         profile_picture_url = data['profilePicture']
         role = data['role']
+        host_name = 'localhost'
 
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
@@ -290,6 +291,14 @@ def register():
         cursor = cnx.cursor()
         cursor.execute("INSERT INTO Users (username, password, role, profile_picture_url) VALUES (%s, %s, %s, %s)", [
             username, hashed_password, role, profile_picture_url])
+        cnx.commit()
+
+        if role == 'admin':
+            cursor.execute(
+                "GRANT ALL PRIVILEGES ON *.* TO %s@%s", [username, host_name]) #all access
+        else:
+            cursor.execute(
+                "GRANT SELECT ON *.* TO %s@%s", [username, host_name]) #read-only/select access
         cnx.commit()
 
         cursor.execute(
