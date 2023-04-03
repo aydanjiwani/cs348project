@@ -111,11 +111,37 @@ def createflight():
     return str(data)
 
 
+@app.route('/passengers')
+def get_passengers():
+    name = request.args.get('name')
+    cnx = mysql.connector.connect(
+        host='localhost',
+        user=DB_USER,
+        password=DB_PWD,
+        database=DB_NAME
+    )
+    cursor = cnx.cursor(dictionary=True)
+
+    query = '''SELECT ID as id, name
+               FROM Passenger
+               WHERE name LIKE CONCAT('%', %s, '%')
+               LIMIT 20;
+            '''
+
+    cursor.execute(query, [name])
+    data = cursor.fetchall()
+    cursor.close()
+    cnx.close()
+    return data
+
+
+
 @app.route('/flights')
 def get_flights():
     src = request.args.get('origin')
     dest = request.args.get('dest')
     status = request.args.get('status')
+    id = request.args.get('id')
 
     page = int(request.args.get('page'))
     results_per_page = int(request.args.get('results_per_page'))
@@ -128,41 +154,56 @@ def get_flights():
     )
     cursor = cnx.cursor(dictionary=True)
 
-    query = '''SELECT Flights.ID as id, departure_time, flight_number,
-                      origin_ap.code AS origin_ap_code,
-                      dest_ap.code AS dest_ap_code,
-                      origin_ap.city AS from_city,
-                      dest_ap.city AS to_city,
-                      Airplane.model AS airplane_model,
-                      status, Airlines.name as airline_name
-               FROM Flights
-               INNER JOIN Airlines ON (Airlines.code = Flights.airline_code)
-               INNER JOIN Routes ON (Flights.route_id = Routes.ID)
-               INNER JOIN Airplane ON (Airplane.code = Routes.airplane_code)
-               INNER JOIN Airport AS origin_ap ON (origin_ap.code = Routes.origin_ap_code)
-               INNER JOIN Airport AS dest_ap ON (dest_ap.code = Routes.dest_ap_code)
-               '''
+    if id:
+        query = '''SELECT Flights.ID AS id,
+                          Routes.origin_ap_code,
+                          Routes.dest_ap_code,
+                          departure_time,
+                          flight_number,
+                          count(*) AS ticket_count
+                   FROM Flights
+                   INNER JOIN Routes ON Routes.ID = Flights.route_id
+                   WHERE Flights.ID = %s;
+                '''
+        cursor.execute(query, [id])
+        data = cursor.fetchall()
+    else:
+        query = '''SELECT Flights.ID as id, departure_time, flight_number,
+                          origin_ap.code AS origin_ap_code,
+                          dest_ap.code AS dest_ap_code,
+                          origin_ap.city AS from_city,
+                          dest_ap.city AS to_city,
+                          Airplane.model AS airplane_model,
+                          Flights.status, Airlines.name as airline_name,
+                          (SELECT COUNT(*) FROM Ticket WHERE Ticket.flight_id = Flights.ID) AS ticket_count
+                   FROM Flights
+                   INNER JOIN Airlines ON (Airlines.code = Flights.airline_code)
+                   INNER JOIN Routes ON (Flights.route_id = Routes.ID)
+                   INNER JOIN Airplane ON (Airplane.code = Routes.airplane_code)
+                   INNER JOIN Airport AS origin_ap ON (origin_ap.code = Routes.origin_ap_code)
+                   INNER JOIN Airport AS dest_ap ON (dest_ap.code = Routes.dest_ap_code)
+                   '''
 
-    arg_arr = []
-    if src or dest or status:
-        query += 'WHERE '
-    if src:
-        query += 'Routes.origin_ap_code = %s '
-        arg_arr.append(src)
-    if dest:
-        query += f'{"AND" if src else ""} Routes.dest_ap_code = %s '
-        arg_arr.append(dest)
-    if status:
-        query += f'{"AND" if src or dest else ""} Flights.status = %s '
-        arg_arr.append(status)
+        arg_arr = []
+        if src or dest or status:
+            query += ' WHERE '
+        if src:
+            query += 'Routes.origin_ap_code = %s '
+            arg_arr.append(src)
+        if dest:
+            query += f'{"AND" if src else ""} Routes.dest_ap_code = %s '
+            arg_arr.append(dest)
+        if status:
+            query += f'{"AND" if src or dest else ""} Flights.status = %s '
+            arg_arr.append(status)
 
 
-    query += 'ORDER BY Flights.departure_time LIMIT %s,%s;'
+        query += ''' ORDER BY Flights.departure_time LIMIT %s,%s;'''
 
-    offset = (page-1) * results_per_page
-    cursor.execute(query, arg_arr + [offset, results_per_page])
+        offset = (page-1) * results_per_page
+        cursor.execute(query, arg_arr + [offset, results_per_page])
 
-    data = cursor.fetchall()
+        data = cursor.fetchall()
 
     cursor.close()
     cnx.close()
@@ -224,23 +265,27 @@ def get_routes():
 
 @app.route('/buyticket')
 def buyticket():
-    f_id = request.args.get('f_id')
-    p_id = request.args.get('p_id')
+    f_id = int(request.args.get('f_id'))
+    p_id = int(request.args.get('p_id'))
+    seat_number = int(request.args.get('seat_number'))
     cnx = mysql.connector.connect(
         host='localhost',
         user=DB_USER,
         password=DB_PWD,
-        database=DB_NAME
+        database=DB_NAME,
+        autocommit=True
     )
-    cursor = cnx.cursor()
-    with open('queries/test-sample-buy-ticket.sql', 'r') as f:
-        query = f.read().replace('{f_id}', f_id)
-        query = query.replace('{p_id}', p_id)
-        cursor.execute(query)
-        cnx.commit()
+    cursor = cnx.cursor(dictionary=True)
+    query = '''
+            INSERT INTO Ticket(passenger_id, flight_id, seat_number, status)
+            VALUES (%s, %s, %s, "booked");
+            '''
+    cursor.execute(query, [p_id, f_id, seat_number])
+    cnx.commit()
+    data = cursor.fetchall()
     cursor.close()
     cnx.close()
-    return "ticket bought"
+    return data
 
 
 @app.route('/cancel_flight')
