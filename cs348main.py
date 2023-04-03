@@ -19,13 +19,20 @@ password = "bqexdlglojgpovra"
 # rows[3] = departure name
 # rows[4] = departure email
 
+# Change these according to your database
+DB_NAME = 'world'
+DB_USER = 'username'
+DB_PWD = 'password'
+
+
 def email_all(rows):
     for passenger in range(rows):
         txt = passenger[4]
         end = txt.split("@")
         if end[-1] == "gmail.com":
             subject = "flight notifiation"
-            message = "hello " + passenger[3] + " your flight from " + passenger[1] + " to " + passenger[2] + " will depart at " + passenger[0].strftime("%Y-%m-%d %H:%M") + " please be there at least 2 hours in advance to check in your bags. Enjoy your flight ;)"
+            message = "hello " + passenger[3] + " your flight from " + passenger[1] + " to " + passenger[2] + " will depart at " + passenger[0].strftime(
+                "%Y-%m-%d %H:%M") + " please be there at least 2 hours in advance to check in your bags. Enjoy your flight ;)"
 
             em = EmailMessage()
             em['From'] = from_addr
@@ -39,6 +46,7 @@ def email_all(rows):
                 smtp.login(from_addr, password)
                 smtp.sendmail(from_addr, passenger[4], em.as_string())
 
+
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
@@ -51,11 +59,6 @@ app.config.update(
 
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
-
-# Change these according to your database
-DB_NAME = 'world'
-DB_USER = 'username'
-DB_PWD = 'password'
 
 
 def displaymap(points):
@@ -108,9 +111,6 @@ def displaymap(points):
     # Render the HTML template with the Pydeck visualization
     return html
 
-DB_NAME = 'prod'
-DB_USER = 'noor'
-DB_PWD = 'password'
 
 @app.route('/init')
 def init():
@@ -211,7 +211,6 @@ def get_airports():
     return data
 
 
-
 @app.route('/createflight')
 def createflight():
     route_id = request.args.get('route_id')
@@ -233,7 +232,8 @@ def createflight():
                  Flights(route_id,flight_number,departure_time,airline_code,distance_miles,duration_minutes)
                  VALUES (%s, %s, %s, %s, %s, %s);
             '''
-    cursor.execute(query, [route_id, flight_number, departure_time, airline_code, distance_miles, duration_minutes])
+    cursor.execute(query, [route_id, flight_number, departure_time,
+                   airline_code, distance_miles, duration_minutes])
     data = cursor.fetchall()
     cnx.commit()
     cursor.close()
@@ -284,7 +284,6 @@ def get_passengers():
     cursor.close()
     cnx.close()
     return data
-
 
 
 @app.route('/flights')
@@ -347,7 +346,6 @@ def get_flights():
         if status:
             query += f'{"AND" if src or dest else ""} Flights.status = %s '
             arg_arr.append(status)
-
 
         query += ''' ORDER BY Flights.departure_time LIMIT %s,%s;'''
 
