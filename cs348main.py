@@ -35,39 +35,80 @@ def index():
 
 @app.route('/airports')
 def get_airports():
+    origin = request.args.get('origin_ap_code')
+    dest = request.args.get('dest_ap_code')
+    origin_search = request.args.get('origin_ap_code_search')
+    dest_search = request.args.get('dest_ap_code_search')
     cnx = mysql.connector.connect(
         host='localhost',
         user=DB_USER,
         password=DB_PWD,
         database=DB_NAME
     )
-    cursor = cnx.cursor()
-    code = request.args.get('code', default='', type=str)
-    cursor.execute("SELECT code FROM Airport WHERE code LIKE CONCAT('%', %s, '%')", [code])
+    cursor = cnx.cursor(dictionary=True)
+
+    if dest_search:
+        args = [dest_search]
+        query = '''SELECT DISTINCT dest_ap_code AS airport_code, min(ID) AS route_id, min(Airplane.model) AS airplane_model
+                   FROM Routes
+                   INNER JOIN Airplane ON Airplane.code = Routes.airplane_code
+                   WHERE dest_ap_code LIKE CONCAT('%', %s, '%')
+                '''
+
+        if origin:
+            query += " AND origin_ap_code = %s "
+            args.append(origin)
+
+        query += f'GROUP BY dest_ap_code{", origin_ap_code" if origin else ""} LIMIT 40;'
+
+    else:
+        args = [origin_search]
+        query = '''SELECT DISTINCT origin_ap_code AS airport_code, min(ID) as route_id, min(Airplane.model) AS airplane_model
+                   FROM Routes
+                   INNER JOIN Airplane ON Airplane.code = Routes.airplane_code
+                   WHERE origin_ap_code LIKE CONCAT('%', %s, '%')
+                '''
+
+        if dest:
+            query += " AND dest_ap_code = %s "
+            args.append(dest)
+
+        query += f'GROUP BY origin_ap_code{", dest_ap_code" if dest else ""} LIMIT 40;'
+
+    cursor.execute(query, args)
     data = cursor.fetchall()
     cursor.close()
     cnx.close()
-    return {"data": data}
+    return data
 
 
 @app.route('/createflight')
 def createflight():
     route_id = request.args.get('route_id')
-    start = request.args.get('start')
-    end = request.args.get('end')
-    airline = request.args.get('airline')
-    print(route_id, start, end, airline)
+    flight_number = request.args.get('flight_number')
+    departure_time = request.args.get('departure_time')
+    distance_miles = request.args.get('distance_miles')
+    duration_minutes = request.args.get('duration_minutes')
+    airline_code = request.args.get('airline_code')
+
     cnx = mysql.connector.connect(
         host='localhost',
         user=DB_USER,
         password=DB_PWD,
         database=DB_NAME
     )
+
     cursor = cnx.cursor()
+    query = '''INSERT INTO
+                 Flights(route_id,flight_number,departure_time,airline_code,distance_miles,duration_minutes)
+                 VALUES (%s, %s, %s, %s, %s, %s);
+            '''
+    cursor.execute(query, [route_id, flight_number, departure_time, airline_code, distance_miles, duration_minutes])
     data = cursor.fetchall()
+    cnx.commit()
     cursor.close()
     cnx.close()
-    return "flight created"
+    return str(data)
 
 
 @app.route('/flights')
@@ -117,7 +158,6 @@ def get_flights():
 
 
     query += 'ORDER BY Flights.departure_time LIMIT %s,%s;'
-    print(query)
 
     offset = (page-1) * results_per_page
     cursor.execute(query, arg_arr + [offset, results_per_page])
@@ -129,11 +169,34 @@ def get_flights():
     return data
 
 
+@app.route('/airlines')
+def get_airlines():
+    name = request.args.get('airline_name')
+    cnx = mysql.connector.connect(
+        host='localhost',
+        user=DB_USER,
+        password=DB_PWD,
+        database=DB_NAME
+    )
+    cursor = cnx.cursor(dictionary=True)
+
+    query = '''SELECT Airlines.code AS airline_code, Airlines.name AS airline_name
+               FROM Airlines
+               WHERE Airlines.name LIKE CONCAT('%', %s, '%')
+               LIMIT 20;
+            '''
+
+    cursor.execute(query, [name])
+    data = cursor.fetchall()
+    cursor.close()
+    cnx.close()
+    return data
+
+
 @app.route('/routes')
 def get_routes():
     src = request.args.get('origin_ap_code')
     dest = request.args.get('dest_ap_code')
-    airline_name = request.args.get('airline_name')
 
     cnx = mysql.connector.connect(
         host='localhost',
@@ -143,9 +206,14 @@ def get_routes():
     )
     cursor = cnx.cursor(dictionary=True)
 
-    query = ''' '''
+    query = '''SELECT Routes.ID AS id, Airplane.model AS airplane_model
+               FROM Routes
+               INNER JOIN Airplane on Airplane.code = Routes.airplane_code
+               WHERE Routes.origin_ap_code = %s
+                 AND Routes.dest_ap_code = %s
+            '''
 
-    cursor.execute(query, [src, dest, airline_name])
+    cursor.execute(query, [src, dest])
 
     data = cursor.fetchall()
 
