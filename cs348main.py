@@ -9,8 +9,8 @@ import smtplib
 import ssl
 from email.message import EmailMessage
 
-from_addr = "airportabcd@gmail.com"
-password = "fspyxaxnkptjxfrg"
+from_addr = "airportabcde@gmail.com"
+password = "bqexdlglojgpovra"
 
 # rows[0] = departure time
 # rows[1] = departure origin
@@ -24,7 +24,7 @@ def email_all(rows):
         end = txt.split("@")
         if end[-1] == "gmail.com":
             subject = "flight notifiation"
-            message = "hello " + passenger[3] + " your flight from " + passenger[1] + " to " + passenger[2] + " will depart at " + passenger[0] + " please be there at least 2 hours in advance to check in your bags. Enjoy your flight ;)"
+            message = "hello " + passenger[3] + " your flight from " + passenger[1] + " to " + passenger[2] + " will depart at " + passenger[0].strftime("%Y-%m-%d %H:%M") + " please be there at least 2 hours in advance to check in your bags. Enjoy your flight ;)"
 
             em = EmailMessage()
             em['From'] = from_addr
