@@ -31,7 +31,6 @@ CREATE TABLE Routes (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     origin_ap_code VARCHAR(10) NOT NULL,
     dest_ap_code VARCHAR(10) NULL,
-    airline_code VARCHAR(10) NOT NULL,
     airplane_code VARCHAR(10) NOT NULL,
     FOREIGN KEY (origin_ap_code) REFERENCES Airport(code),
     FOREIGN KEY (dest_ap_code) REFERENCES Airport(code),
