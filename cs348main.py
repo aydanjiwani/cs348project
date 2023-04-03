@@ -5,6 +5,38 @@ import hashlib
 from flask_session import Session
 from datetime import timedelta
 import pydeck as pdk
+import smtplib
+import ssl
+from email.message import EmailMessage
+
+from_addr = "airportabcd@gmail.com"
+password = "fspyxaxnkptjxfrg"
+
+# rows[0] = departure time
+# rows[1] = departure origin
+# rows[2] = departure destination
+# rows[3] = departure name
+# rows[4] = departure email
+
+def email_all(rows):
+    for passenger in range(rows):
+        txt = passenger[4]
+        end = txt.split("@")
+        if end[-1] == "gmail.com":
+            subject = "flight notifiation"
+            message = "hello " + passenger[3] + " your flight from " + passenger[1] + " to " + passenger[2] + " will depart at " + passenger[0] + " please be there at least 2 hours in advance to check in your bags. Enjoy your flight ;)"
+
+            em = EmailMessage()
+            em['From'] = from_addr
+            em['To'] = passenger[4]
+            em['Subject'] = subject
+            em.set_content(message)
+
+            context = ssl.create_default_context()
+
+            with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+                smtp.login(from_addr, password)
+                smtp.sendmail(from_addr, passenger[4], em.as_string())
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -243,6 +275,7 @@ def emailpassengers():
         print(query)
         cursor.execute(query)
         emaildata = cursor.fetchall()
+        email_all(emaildata)
         cnx.commit()
     cursor.close()
     cnx.close()
