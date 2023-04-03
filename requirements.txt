@@ -3,3 +3,5 @@ mysql
 mysql-connector-python
 mysql-connector-python-rf
 smtplib
+Flask-Session
+datetime
