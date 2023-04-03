@@ -65,6 +65,8 @@ CREATE TABLE Ticket (
 
 CREATE TABLE Users (
     ID INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(100) NOT NULL,
-    is_admin TINYINT NOT NULL -- 0 is not admin, 1 is admin
+    username VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(100) NOT NULL,
+    role ENUM('admin', 'default') NOT NULL default 'default',
+    profile_picture_url VARCHAR(500)
 );

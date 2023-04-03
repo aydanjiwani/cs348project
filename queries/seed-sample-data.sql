@@ -21,7 +21,7 @@ INSERT INTO Ticket(id, passenger_id, flight_id, seat_number, status)
 VALUES (3, 1, 1, 3, "book");
 INSERT INTO Ticket(id, passenger_id, flight_id, seat_number, status)
 VALUES (4, 1, 1, 4, "book");
-INSERT INTO Users(id, username, is_admin)
-VALUES (1, 'Vaanie', 1);
-INSERT INTO Users(id, username, is_admin)
-VALUES (2, 'Foo', 0);
+INSERT INTO Users (username, password, role, profile_picture_url)
+VALUES ('vaanie', '1234', 'default', null);
+INSERT INTO Users (username, password, role, profile_picture_url)
+VALUES ('john', '123', 'admin', 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80');
