@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, make_response, session
 import mysql.connector
 from flask_cors import CORS
+import hashlib
 
 app = Flask(__name__)
 CORS(app)
@@ -9,6 +10,9 @@ CORS(app)
 DB_NAME = 'world'
 DB_USER = 'username'
 DB_PWD = 'password'
+
+# Secret key for session
+app.secret_key = 'a secret key'
 
 
 @app.route('/init')
@@ -173,6 +177,58 @@ def displaymonthlydelays():
     cursor.close()
     cnx.close()
     return str(data)
+
+
+@app.route('/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    username = data['username']
+    password = data['password']
+    hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
+    cnx = mysql.connector.connect(
+        host='localhost',
+        user=DB_USER,
+        password=DB_PWD,
+        database=DB_NAME,
+        autocommit=True
+    )
+    cursor = cnx.cursor()
+    cursor.execute("INSERT INTO Users (username, password) VALUES (%s, %s)",
+                   [username, hashed_password])
+    cnx.commit()
+    cursor.close()
+    return {'status': 'success'}
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    username = data['username']
+    password = data['password']
+    hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
+    cnx = mysql.connector.connect(
+        host='localhost',
+        user=DB_USER,
+        password=DB_PWD,
+        database=DB_NAME,
+        autocommit=True
+    )
+    cursor = cnx.cursor()
+    cursor.execute("SELECT ID, username, role, profile_picture_url FROM Users WHERE username=%s AND password=%s", [
+                   username, hashed_password])
+    user = cursor.fetchone()
+    cursor.close()
+
+    if user:
+        session['user_id'] = user[0]
+        session['username'] = user[1]
+        session['role'] = user[2]
+        session['profile_picture_url'] = user[3]
+        return {'status': 'success'}
+    else:
+        return {'status': 'error'}, 401
 
 
 if __name__ == '__main__':
