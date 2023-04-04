@@ -549,16 +549,15 @@ def register():
             username, hashed_password, role, profile_picture_url])
         cnx.commit()
 
-        # This code was breaking the register process
-        # cursor.execute(
-        #         "CREATE USER %s@%s IDENTIFIED BY %s", [username, host_name, password])
-        # if role == 'admin':
-        #     cursor.execute(
-        #         "GRANT ALL PRIVILEGES ON %s.* TO %s@%s", [db_name, username, host_name]) #all access
-        # else:
-        #     cursor.execute(
-        #         "GRANT SELECT ON %s.* TO %s@%s", [db_name, username, host_name]) #read-only/select access
-        # cnx.commit()
+        cursor.execute(
+            "CREATE USER %s@%s IDENTIFIED BY %s", [username, host_name, password])
+        if role == 'admin':
+            cursor.execute(
+                "GRANT ALL PRIVILEGES ON %s.* TO %s@%s", [db_name, username, host_name])  # all access
+        else:
+            cursor.execute(
+                "GRANT SELECT ON %s.* TO %s@%s", [db_name, username, host_name])  # read-only/select access
+        cnx.commit()
 
         cursor.execute(
             "SELECT ID, username, role, profile_picture_url FROM Users WHERE username=%s", [username])
