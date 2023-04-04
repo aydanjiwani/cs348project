@@ -2,15 +2,19 @@ Aydan:
 - Python backend to run queries
 - JS basic frontend
 - Query implementation
-- John:
+- R12 Route map
+
+John:
 - E/R diagram
 - R11 line graph
 - R8 create new flight
+- R16 Email notifications
 
 Noredeen:
 - Collected test and production data
 - Wrote preprocessing scripts
 - Wrote seeding scripts
+- Built the enhanced frontend
 
 Rohan:
 - R6 Buy a ticket
@@ -21,6 +25,4 @@ Rohan:
 
 Vaanie:
 - R7 Find flight feature
-- Started implementing R10, R11
-
-Note: Everything not mentioned was done as a team
+- Implemented R10, R11 in cs348main.py

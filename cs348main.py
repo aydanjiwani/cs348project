@@ -145,14 +145,14 @@ def routemap():
     cursor = cnx.cursor()
     code = request.args.get('code', default='', type=str)
     cursor.execute("""SELECT origin.longit AS start_long, origin.lat AS start_lat, dest.longit AS end_long, dest.lat AS end_lat
-FROM airport AS origin
-JOIN routes ON origin.code = routes.origin_ap_code
-JOIN airport AS dest ON dest.code = routes.dest_ap_code
+FROM Airport AS origin
+JOIN Routes ON origin.code = Routes.origin_ap_code
+JOIN Airport AS dest ON dest.code = Routes.dest_ap_code
 JOIN (
   SELECT DISTINCT route_id, COUNT(*) AS num_flights
-  FROM flights
+  FROM Flights
   GROUP BY route_id
-) AS flight_counts ON routes.ID = flight_counts.route_id
+) AS flight_counts ON Routes.ID = flight_counts.route_id
 ORDER BY num_flights DESC
 LIMIT 100;
 """)
